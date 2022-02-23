@@ -4,7 +4,6 @@ namespace App\Invoker;
 
 use App\Command\Command;
 use App\Command\Factory;
-use App\Command\MoveForward;
 use App\Data\CommandTypes;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
