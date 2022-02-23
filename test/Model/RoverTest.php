@@ -68,6 +68,21 @@ class RoverTest extends TestCase
     }
 
     /**
+     * Test that toString function returns the right value
+     */
+    public function testThatToStringFunctionReturnsTheRightValue()
+    {
+        $this->coordinate = $this->getCoordinateMock();
+        $this->coordinate->shoudlReceive('getX')->andReturn(1);
+        $this->coordinate->shoudlReceive('getY')->andReturn(1);
+        $this->rover->setCoordinate($this->coordinate);
+        $this->direction = $this->getDirectionMock();
+        $this->direction->shoudlReceive('getOrientation')->andReturn('N');
+        $this->rover->setDirection($this->direction);
+        $this->assertEquals('1 1 N', $this->rover->toString());
+    }
+
+    /**
      * Mock Coordinate object
      * @return Coordinate
      */
