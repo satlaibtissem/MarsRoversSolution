@@ -8,9 +8,12 @@ use App\Command\RotateLeft;
 use App\Model\Direction;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
+use Test\Traits\ModelMokery;
 
 class RotateLeftTest extends TestCase
 {
+    use ModelMokery;
+
     /**
      * @var RotateLeft
      */
@@ -84,41 +87,15 @@ class RotateLeftTest extends TestCase
     private function getRoverAfterRotation(string $initialDirection, string $finalDirection): Rover
     {
         $rover = $this->getRoverMock();
-        $initialDirection = $this->getDirectionMock($initialDirection);
-        $initialDirection->shouldReceive('setOrientation')
-            ->with($finalDirection)
-            ->andReturnSelf();        
-        $rover->shouldReceive('getDirection')
-            ->andReturn($initialDirection);
-        $rover->shouldReceive('setDirection')
-            ->with($initialDirection)
-            ->andReturnSelf();
+        $roverInitialDirection = $this->getDirectionMock($initialDirection);
+        $roverInitialDirection = $this->configureDirectionOrientation($roverInitialDirection, $finalDirection);
+        $rover = $this->configureRoverDirection($rover, $roverInitialDirection);
         $this->rotateLeft->execute($rover);
-        $rover->shouldReceive('toString')
-            ->andReturn('1 1 ' . $finalDirection);
+        $rover = $this->mockToStringRoverFunction(
+            $rover,
+            $this->getCoordinateMock(1, 1),
+            $this->getDirectionMock($finalDirection)
+        );
         return $rover;
-    }
-
-    /**
-     * Mock Rover object
-     * @return Rover
-     */
-    private function getRoverMock(): Rover
-    {
-        $rover = \Mockery::mock(Rover::class);
-        return $rover;
-    }
-
-    /**
-     * Mock Direction object
-     * @param string $direction
-     * @return Direction
-     */
-    private function getDirectionMock(string $direction): Direction
-    {
-        $directionMock = \Mockery::mock(Direction::class);
-        $directionMock->shouldReceive('getOrientation')
-            ->andReturn($direction);
-        return $directionMock;
     }
 }

@@ -41,7 +41,7 @@ trait ModelMokery
         return $coordinate;
     }
 
-    /**
+     /**
      * Mock Rover object
      * @return Rover
      */
