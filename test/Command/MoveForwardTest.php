@@ -185,8 +185,8 @@ class MoveForwardTest extends TestCase
     /**
      * Mock Rover object
      * @param Coordinate $initalCoordinate
-     * @param Coordinate $coordinate
-     * @param  Direction $finalCoordinate
+     * @param Coordinate $finalCoordinate
+     * @param  Direction $direction
      * @return Rover
      */
     private function getRoverMock(Coordinate $initalCoordinate, Coordinate $finalCoordinate, Direction $direction): Rover
