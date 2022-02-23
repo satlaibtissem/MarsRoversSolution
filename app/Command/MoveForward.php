@@ -4,22 +4,23 @@ namespace App\Command;
 
 use App\Data\DirectionTypes;
 use App\Model\Coordinate;
+use App\Model\Plateau;
 use App\Model\Rover;
 use Exception;
 
 class MoveForward implements Command
 {
     /**
-     * @var Coordinate
+     * @var Plateau
      */
-    private $bordersCoordinate;
+    private $plateau;
 
     /**
      * @param Coordinate $bordersCoordinate
      */
-    public function __construct(Coordinate $bordersCoordinate)
+    public function __construct(Plateau $plateau)
     {
-        $this->bordersCoordinate = $bordersCoordinate;
+        $this->plateau = $plateau;
     }
 
     /**
@@ -31,25 +32,25 @@ class MoveForward implements Command
         switch ($rover->getDirection()->getOrientation()) {
             case DirectionTypes::NORTH:
                 $newYCoordinate = $rover->getCoordinate()->getY() + 1;
-                if ($newYCoordinate > $this->bordersCoordinate->getY())
+                if ($newYCoordinate > $this->plateau->getUpperRightCoordinate()->getY())
                     $this->throwExceptionRoverCantMove();
                 $roverCoordinate->setY($newYCoordinate);
                 break;
             case DirectionTypes::EAST:
                 $newXCoordinate = $rover->getCoordinate()->getX() + 1;
-                if ($newXCoordinate > $this->bordersCoordinate->getX())
+                if ($newXCoordinate > $this->plateau->getUpperRightCoordinate()->getX())
                     $this->throwExceptionRoverCantMove();
                 $roverCoordinate->setX($newXCoordinate);
                 break;
             case DirectionTypes::WEST:
                 $newXCoordinate = $rover->getCoordinate()->getX() - 1;
-                if ($newXCoordinate < 0)
+                if ($newXCoordinate < $this->plateau->getLowerLeftCoordinate()->getX())
                     $this->throwExceptionRoverCantMove();
                 $roverCoordinate->setX($newXCoordinate);
                 break;
             case DirectionTypes::SOUTH:
                 $newYCoordinate = $rover->getCoordinate()->getY() - 1;
-                if ($newYCoordinate < 0)
+                if ($newYCoordinate < $this->plateau->getLowerLeftCoordinate()->getY())
                     $this->throwExceptionRoverCantMove();
                 $roverCoordinate->setY($newYCoordinate);
                 break;

@@ -2,15 +2,20 @@
 
 namespace Test\Command;
 
+use App\Command\CommandFactory;
+use App\Command\Factory;
 use App\Command\MoveForward;
 use App\Command\RotateLeft;
 use App\Command\RotateRight;
 use App\Data\CommandTypes;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Test\Traits\ModelMokery;
 
 class CommandFactoryTest extends TestCase
 {
+    use ModelMokery;
+
     /**
      * @var CommandFactory
      */
@@ -37,7 +42,15 @@ class CommandFactoryTest extends TestCase
      */
     public function testThatCreateCommandCreatesMoveForwardCommand()
     {
-        $this->assertInstanceOf(MoveForward::class, $this->factory->createCommand(CommandTypes::MOVE_FORWARD));
+        $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
+        $upperRightCoordinate = $this->getCoordinateMock(5, 5);
+        $this->assertInstanceOf(
+            MoveForward::class,
+            $this->factory->createCommand(
+                CommandTypes::MOVE_FORWARD,
+                [$this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate)]
+            )
+        );
     }
 
     /**
@@ -63,5 +76,14 @@ class CommandFactoryTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->factory->createCommand('S');
+    }
+
+    /**
+     * Test that create command function throws exception if we don't pass arguments
+     */
+    public function testThatCreateCommandThrowsExceptionIfNoArgsArePassed()
+    {
+        $this->expectException(Exception::class);
+        $this->factory->createCommand(CommandTypes::MOVE_FORWARD);
     }
 }
