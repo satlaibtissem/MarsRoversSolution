@@ -5,8 +5,9 @@ namespace App\Command;
 use App\Data\DirectionTypes;
 use App\Model\Rover;
 
-class RotateLeft extends Rotatable
+class RotateRight extends Rotatable
 {
+
     /**
      * @inheritDoc
      */
@@ -14,16 +15,16 @@ class RotateLeft extends Rotatable
     {
         switch ($rover->getDirection()->getOrientation()) {
             case DirectionTypes::NORTH:
-                $direction = DirectionTypes::WEST;
+                $direction = DirectionTypes::EAST;
                 break;
             case DirectionTypes::WEST:
-                $direction = DirectionTypes::SOUTH;
-                break;
-            case DirectionTypes::EAST:
                 $direction = DirectionTypes::NORTH;
                 break;
+            case DirectionTypes::EAST:
+                $direction = DirectionTypes::SOUTH;
+                break;
             case DirectionTypes::SOUTH:
-                $direction = DirectionTypes::EAST;
+                $direction = DirectionTypes::WEST;
                 break;
         }
         $rover->getDirection()->setOrientation($direction);

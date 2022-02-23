@@ -2,6 +2,9 @@
 
 namespace Test\Command;
 
+use App\Command\Command;
+use App\Command\Rotatable;
+use App\Command\RotateRight;
 use App\Model\Direction;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
@@ -51,8 +54,8 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandReturnsTheRightDirectionForEastDirection()
     {
-        $rover = $this->getRoverAfterRotation('E', 'N');
-        $this->assertEquals('1 1 N', $rover->toString());
+        $rover = $this->getRoverAfterRotation('E', 'S');
+        $this->assertEquals('1 1 S', $rover->toString());
     }
 
     /**
