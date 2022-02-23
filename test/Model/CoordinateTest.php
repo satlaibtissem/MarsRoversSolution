@@ -2,6 +2,7 @@
 
 namespace Test\Model;
 
+use App\Model\Coordinate;
 use PHPUnit\Framework\TestCase;
 
 class CoordinateTest extends TestCase
@@ -60,6 +61,6 @@ class CoordinateTest extends TestCase
     public function testThatSetYChangesTheValueOfY()
     {
         $this->coordinate->setY($this->y + 1);
-        $this->assertEquals($this->Y + 1 , $this->coordinate->getY());
+        $this->assertEquals($this->y + 1 , $this->coordinate->getY());
     }
 }

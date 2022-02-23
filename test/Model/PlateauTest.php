@@ -2,6 +2,8 @@
 
 namespace Test\Model;
 
+use App\Model\Coordinate;
+use App\Model\Plateau;
 use PHPUnit\Framework\TestCase;
 
 

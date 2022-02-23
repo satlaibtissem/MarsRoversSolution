@@ -2,6 +2,9 @@
 
 namespace Test\Model;
 
+use App\Model\Coordinate;
+use App\Model\Direction;
+use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
 
 
@@ -73,11 +76,11 @@ class RoverTest extends TestCase
     public function testThatToStringFunctionReturnsTheRightValue()
     {
         $this->coordinate = $this->getCoordinateMock();
-        $this->coordinate->shoudlReceive('getX')->andReturn(1);
-        $this->coordinate->shoudlReceive('getY')->andReturn(1);
+        $this->coordinate->shouldReceive('getX')->andReturn(1);
+        $this->coordinate->shouldReceive('getY')->andReturn(1);
         $this->rover->setCoordinate($this->coordinate);
         $this->direction = $this->getDirectionMock();
-        $this->direction->shoudlReceive('getOrientation')->andReturn('N');
+        $this->direction->shouldReceive('getOrientation')->andReturn('N');
         $this->rover->setDirection($this->direction);
         $this->assertEquals('1 1 N', $this->rover->toString());
     }
