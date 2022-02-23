@@ -2,9 +2,11 @@
 
 namespace App\Invoker;
 
+use App\Command\Command;
 use App\Command\Factory;
 use App\Command\MoveForward;
 use App\Data\CommandTypes;
+use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
 use Test\Traits\ModelMokery;
 
@@ -18,7 +20,7 @@ class CommandExecuterTest extends TestCase
     public function testThatCommandExecuterIsAnInstanceOfInvokerInterface()
     {
         $commandExecuter = new CommandExecuter($this->getFactoryMock());
-        $this->assertInstanceOf(Invoker::class, $this->commandExecuter);
+        $this->assertInstanceOf(Invoker::class, $commandExecuter);
     }
 
     /**
@@ -30,16 +32,17 @@ class CommandExecuterTest extends TestCase
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
         $rover = $this->configureRoverPosition(1, 2, 'N');
-        $factory->shouldReceive('createCommande')
+        $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
+        $factory->shouldReceive('createCommand')
             ->with(
                 CommandTypes::MOVE_FORWARD,
-                [$this->getPlateau($lowerLeftCoordinate, $upperRightCoordinate)]
+                ['plateau' => $plateau]
             )
             ->andReturn($this->getMoveForwardMock($rover));
         
         $commandExecuter = new CommandExecuter($factory);
-        $commandExecuter->executeCommand($rover);
-        $this->assertInstanceOf('1 2 N', $this->rover->toString());
+        $commandExecuter->executeCommand(CommandTypes::MOVE_FORWARD, $rover, $plateau);
+        $this->assertEquals('1 2 N', $rover->toString());
     }
 
     /**
@@ -52,14 +55,15 @@ class CommandExecuterTest extends TestCase
 
     /**
      * @param Rover $rover
-     * @return Factory
+     * @return Command
      */
-    private function getMoveForwardMock(Rover $rover): Factory
+    private function getMoveForwardMock(Rover $rover): Command
     {
-        $moveForward = \Mockery::mock(MoveForward::class);
+        $moveForward = \Mockery::mock(Command::class);
         $moveForward->shouldReceive('execute')
             ->with($rover)
             ->andReturnSelf();
+        return $moveForward;
     }
 
     /**

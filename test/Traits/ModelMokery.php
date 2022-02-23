@@ -13,7 +13,7 @@ trait ModelMokery
      * Mock Plateau object
      * @param Coordinate $lowerLeftCoordinate
      * @param Coordinate $upperRightCoordinate
-     * @return Coordinate
+     * @return Plateau
      */
     private function getPlateauMock(Coordinate $lowerLeftCoordinate, Coordinate $upperRightCoordinate): Plateau
     {
