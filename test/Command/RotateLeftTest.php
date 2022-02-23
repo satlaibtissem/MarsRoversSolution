@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Repository\Command;
+namespace Test\Command;
 
+use PHPUnit\Framework\TestCase;
 
-class RotateLeftTest
+class RotateLeftTest extends TestCase
 {
 }

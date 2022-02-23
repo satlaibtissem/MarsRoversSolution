@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Command;
+namespace Test\Command;
 
 use PHPUnit\Framework\TestCase;
 
