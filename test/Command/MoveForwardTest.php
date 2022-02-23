@@ -76,7 +76,7 @@ class MoveForwardTest extends TestCase
     /**
      * Test that execute function throws an exception if can't execute movement
      */
-    public function testthatExecuteThrowsExceptionIfMovementIsNotPossible()
+    public function testThatExecuteThrowsExceptionIfMovementIsNotPossible()
     {
         $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
         $rover = $this->getRoverMock(

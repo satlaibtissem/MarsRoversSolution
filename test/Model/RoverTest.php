@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Model;
+namespace Test\Model;
 
-class Rover
+use PHPUnit\Framework\TestCase;
+
+
+class RoverTest extends TestCase
 {
-    /**
+
+   /**
      * @var Coordinate
      */
     private $coordinate;
@@ -12,60 +16,74 @@ class Rover
      * @var Direction
      */
     private $direction;
+    /**
+     * @var Rover
+     */
+    private $rover;
 
     /**
-     * @param Coordinate $coordinate
-     * @param Direction $direction
+     * This method is called before each test.
      */
-    public function __construct(Coordinate $coordinate, Direction $direction)
+    protected function setUp(): void
     {
-        $this->coordinate = $coordinate;
-        $this->direction = $direction;
+        $this->coordinate = $this->getCoordinateMock();
+        $this->direction = $this->getDirectionMock();
+        $this->rover = new Rover($this->coordinate, $this->direction);
     }
 
     /**
-     * Get coordinate
+     * Test that getCoordinate function returns the right value
+     */
+    public function testThatGetCoordinateReturnsTheRightValue()
+    {
+        $this->assertEquals($this->coordinate, $this->rover->getCoordinate());
+    }
+
+    /**
+     * Test that getDirection function returns the right value
+     */
+    public function testThatGetDirectionReturnsTheRightValue()
+    {
+        $this->assertEquals($this->direction, $this->rover->getDirection());
+    }
+
+    /**
+     * Test that setCoordinate function changes the coordinate of the rover
+     */
+    public function testThatSetCoordinateChangesTheCoordinateOfRover()
+    {
+        $this->coordinate = $this->getCoordinateMock();
+        $this->rover->setCoordinate($this->coordinate);
+        $this->assertEquals($this->coordinate, $this->rover->getCoordinate());
+    }
+
+    /**
+     * Test that setDirection function changes the direction of the rover
+     */
+    public function testThatSetDirectionChangesTheDirectionOfRover()
+    {
+        $this->direction = $this->getDirectionMock();
+        $this->rover->setDirection($this->direction);
+        $this->assertEquals($this->direction, $this->rover->getDirection());
+    }
+
+    /**
+     * Mock Coordinate object
      * @return Coordinate
      */
-    public function getCoordinate(): Coordinate
+    private function getCoordinateMock(): Coordinate
     {
-        return $this->coordinate;
+        $coordinate = \Mockery::mock(Coordinate::class);
+        return $coordinate;
     }
 
     /**
-     * Get direction
+     * Mock Direction object
      * @return Direction
      */
-    public function getDirection(): Direction
+    private function getDirectionMock(): Direction
     {
-        return $this->direction;
-    }
-
-    /**
-     * Set direction
-     * @param Direction $direction
-     */
-    public function setDirection(Direction $direction)
-    {
-        $this->direction = $direction;
-    }
-
-    /**
-     * Set coordinate
-     * @param Coordinate $coordinate
-     */
-    public function setCoordinate(Coordinate $coordinate)
-    {
-        $this->coordinate = $coordinate;
-    }
-
-    /**
-     * @return string
-     */
-    public function toString(): string
-    {
-        return $this->coordinate->getX() . ' ' .
-            $this->coordinate->getY() . ' ' .
-            $this->direction->getOrientation();
+        $directionMock = \Mockery::mock(Direction::class);
+        return $directionMock;
     }
 }
