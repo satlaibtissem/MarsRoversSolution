@@ -1,49 +1,41 @@
 <?php
 
-namespace App\Model;
+namespace Test\Model;
 
-use App\Data\DirectionTypes;
-use ReflectionClass;
+use Exception;
+use PHPUnit\Framework\TestCase;
 
-class Direction
+
+class DirectionTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private $orientation;
 
     /**
-     * @param string $orientation
+     * Test that getOrientation function returns the right value of Orientation
      */
-    public function __construct(string $orientation)
+    public function testThatGetOrientationReturnsTheRightValue()
     {
-        $orientation = trim($orientation);
-        $this->validateOrientation($orientation);
-        $this->orientation = $orientation;
-           
+        $orientation = 'N';
+        $direction = new Direction($orientation);
+        $this->assertEquals($orientation, $direction->getOrientation());
     }
 
     /**
-     * Get Orientation
-     * @return string
+     * Test that setOrientation function changes the value of orientation
      */
-    public function getOrientation(): string
+    public function testThatSetOrientationChangesTheOrientationValue()
     {
-        return $this->orientation;
+        $direction = new Direction('N');
+        $orientation = 'W';
+        $direction->setOrientation($orientation);
+        $this->assertEquals($orientation, $direction->getOrientation());
     }
 
-    /** Check if it's a valid orientation
-     * @param string $orientation
-     * @throws Exception
+    /**
+     * Test that instantiating the direction class with wrong direction throws an exception
      */
-    private function validateOrientation(string $orientation)
+    public function testThatPassingTheWrongDirectionThrowsAnException()
     {
-        $supportedDirections = (new ReflectionClass(DirectionTypes::class))->getConstants();
-        if (!in_array(
-            $orientation,
-            $supportedDirections,
-            true)
-        )
-            throw new \Exception('Invalid Orientation: ' . $orientation);
+        $this->expectedException(Exception::class);
+        $direction = new Direction('F');
     }
 }

@@ -4,8 +4,6 @@ namespace Test\Model;
 
 use PHPUnit\Framework\TestCase;
 
-use function PHPUnit\Framework\assertEquals;
-
 class CoordinateTest extends TestCase
 {
     /**
@@ -36,7 +34,7 @@ class CoordinateTest extends TestCase
      */
     public function testThatGetXReturnsTheRightValue()
     {
-        assertEquals($this->x, $this->coordinate->getX());
+        $this->assertEquals($this->x, $this->coordinate->getX());
     }
 
     /**
@@ -44,7 +42,7 @@ class CoordinateTest extends TestCase
      */
     public function testThatGetYReturnsTheRightValue()
     {
-        assertEquals($this->y, $this->coordinate->getY());
+        $this->assertEquals($this->y, $this->coordinate->getY());
     }
 
     /**
@@ -53,7 +51,7 @@ class CoordinateTest extends TestCase
     public function testThatSetXChangesTheValueOfX()
     {
         $this->coordinate->setX($this->x + 1);
-        assertEquals($this->x + 1 , $this->coordinate->getX());
+        $this->assertEquals($this->x + 1 , $this->coordinate->getX());
     }
 
     /**
@@ -62,6 +60,6 @@ class CoordinateTest extends TestCase
     public function testThatSetYChangesTheValueOfY()
     {
         $this->coordinate->setY($this->y + 1);
-        assertEquals($this->Y + 1 , $this->coordinate->getY());
+        $this->assertEquals($this->Y + 1 , $this->coordinate->getY());
     }
 }
