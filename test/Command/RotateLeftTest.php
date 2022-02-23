@@ -2,6 +2,9 @@
 
 namespace Test\Command;
 
+use App\Command\Command;
+use App\Command\Rotatable;
+use App\Command\RotateLeft;
 use App\Model\Direction;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
@@ -42,16 +45,8 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForNorthDirection()
     {
-        $rover = $this->getRoverMock();
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('N'));
-        $rover->shouldReceive('setDirection')
-            ->with($this->getDirectionMock('W'))
-            ->andReturnSelf();
-        $this->rotateLeft->execute($rover);
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('W'));
-        $this->assertEquals('W', $rover->getDirection()->getOrientation());
+        $rover = $this->getRoverAfterRotation('N', 'W');
+        $this->assertEquals('1 1 W', $rover->toString());
     }
 
     /**
@@ -59,16 +54,8 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForEastDirection()
     {
-        $rover = $this->getRoverMock();
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('E'));
-        $rover->shouldReceive('setDirection')
-            ->with($this->getDirectionMock('N'))
-            ->andReturnSelf();
-        $this->rotateLeft->execute($rover);
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('N'));
-        $this->assertEquals('N', $rover->getDirection()->getOrientation());;
+        $rover = $this->getRoverAfterRotation('E', 'N');
+        $this->assertEquals('1 1 N', $rover->toString());
     }
 
     /**
@@ -76,16 +63,8 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForSouthDirection()
     {
-        $rover = $this->getRoverMock();
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('S'));
-        $rover->shouldReceive('setDirection')
-            ->with($this->getDirectionMock('E'))
-            ->andReturnSelf();
-        $this->rotateLeft->execute($rover);
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('E'));
-        $this->assertEquals('E', $rover->getDirection()->getOrientation());
+        $rover = $this->getRoverAfterRotation('S', 'E');
+        $this->assertEquals('1 1 E', $rover->toString());
     }
 
     /**
@@ -93,16 +72,31 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForWestDirection()
     {
+        $rover = $this->getRoverAfterRotation('W', 'S');
+        $this->assertEquals('1 1 S', $rover->toString());
+    }
+
+    /**
+     * @param string $initialDirection
+     * @param string $finalDirection
+     * @return Rover
+     */
+    private function getRoverAfterRotation(string $initialDirection, string $finalDirection): Rover
+    {
         $rover = $this->getRoverMock();
+        $initialDirection = $this->getDirectionMock($initialDirection);
+        $initialDirection->shouldReceive('setOrientation')
+            ->with($finalDirection)
+            ->andReturnSelf();        
         $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('W'));
+            ->andReturn($initialDirection);
         $rover->shouldReceive('setDirection')
-            ->with($this->getDirectionMock('S'))
+            ->with($initialDirection)
             ->andReturnSelf();
         $this->rotateLeft->execute($rover);
-        $rover->shouldReceive('getDirection')
-            ->andReturn($this->getDirectionMock('S'));
-        $this->assertEquals('S', $rover->getDirection()->getOrientation());
+        $rover->shouldReceive('toString')
+            ->andReturn('1 1 ' . $finalDirection);
+        return $rover;
     }
 
     /**

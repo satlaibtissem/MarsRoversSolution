@@ -21,6 +21,17 @@ class DirectionTest extends TestCase
     }
 
     /**
+     * Test that setOrientation function changes the orientation
+     */
+    public function testThatSetOrientationChangesTheOrientation()
+    {
+        $newOrientation = 'W';
+        $direction = new Direction('N');
+        $direction->setOrientation($newOrientation);
+        $this->assertEquals($newOrientation, $direction->getOrientation());
+    }
+
+    /**
      * Test that instantiating the direction class with wrong direction throws an exception
      */
     public function testThatPassingTheWrongDirectionThrowsAnException()

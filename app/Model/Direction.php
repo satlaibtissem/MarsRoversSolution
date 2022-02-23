@@ -32,6 +32,15 @@ class Direction
         return $this->orientation;
     }
 
+    /**
+     * Set Orientation
+     * @param string $orientation
+     */
+    public function setOrientation(string $orientation)
+    {
+        $this->orientation = $orientation;
+    }
+
     /** Check if it's a valid orientation
      * @param string $orientation
      * @throws Exception
