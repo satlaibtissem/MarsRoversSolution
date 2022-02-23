@@ -3,14 +3,24 @@ declare(strict_types=1);
 
 namespace Test\Command;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class MoveForwardTest extends TestCase
 {
     /**
-     * 
+     * Test that MoveForward class is an instance of Command interface
      */
-    public function testThatMoveForwardCommandMovesObjectCorrectly()
+    public function testThatMoveForwardCommandIsAnInstanceOfCommandInterface()
+    {
+        $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
+        $this->assertInstanceOf(Command::class, $moveForward);
+    }
+
+    /**
+     * Test that execute a move forward gives the right results for north direction
+     */
+    public function testThatMoveForwardCommandMovesObjectCorrectlyInNorthDirection()
     {
         $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
         $rover = $this->getRoverMock(
@@ -19,6 +29,62 @@ class MoveForwardTest extends TestCase
         );
         $moveForward->execute($rover);
         $this->assertEquals('1 3 N', $rover->toString());
+    }
+
+    /**
+     * Test that execute a move forward gives the right results for easth direction
+     */
+    public function testThatMoveForwardCommandMovesObjectCorrectlyInEastDirection()
+    {
+        $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
+        $rover = $this->getRoverMock(
+            $this->getCoordinateMock(1, 2),
+            $this->getDirectionMock('E')
+        );
+        $moveForward->execute($rover);
+        $this->assertEquals('2 2 E', $rover->toString());
+    }
+
+    /**
+     * Test that execute a move forward gives the right results for south direction
+     */
+    public function testThatMoveForwardCommandMovesObjectCorrectlyInSouthDirection()
+    {
+        $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
+        $rover = $this->getRoverMock(
+            $this->getCoordinateMock(1, 2),
+            $this->getDirectionMock('S')
+        );
+        $moveForward->execute($rover);
+        $this->assertEquals('1 1 S', $rover->toString());
+    }
+
+    /**
+     * Test that execute a move forward gives the right results for west direction
+     */
+    public function testThatMoveForwardCommandMovesObjectCorrectlyInWestDirection()
+    {
+        $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
+        $rover = $this->getRoverMock(
+            $this->getCoordinateMock(2, 2),
+            $this->getDirectionMock('W')
+        );
+        $moveForward->execute($rover);
+        $this->assertEquals('1 2 W', $rover->toString());
+    }
+
+    /**
+     * Test that execute function throws an exception if can't execute movement
+     */
+    public function testthatExecuteThrowsExceptionIfMovementIsNotPossible()
+    {
+        $moveForward = new MoveForward($this->getCoordinateMock(5, 5));
+        $rover = $this->getRoverMock(
+            $this->getCoordinateMock(1, 5),
+            $this->getDirectionMock('N')
+        );
+        $this->expectException(Exception::class);
+        $moveForward->execute($rover);
     }
 
     /**
