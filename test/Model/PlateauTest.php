@@ -1,42 +1,59 @@
 <?php
 
-namespace App\Model;
+namespace Test\Model;
 
-class Plateau
+use PHPUnit\Framework\TestCase;
+
+
+class PlateauTest extends TestCase
 {
+
     /**
      * @var Coordinate
      */
-    private $lowerLeft;
+    private $lowerLeftCoordinate;
     /**
      * @var Coordinate
      */
-    private $upperRight;
+    private $upperRightCoordinate;
+    /**
+     * @var Plateau
+     */
+    private $plateau;
 
     /**
-     * @param Coordinate $upperRightCoordinate
+     * This method is called before each test.
      */
-    public function __construct(Coordinate $upperRightCoordinate)
+    protected function setUp(): void
     {
-        $this->lowerLeft = new Coordinate(0, 0);
-        $this->upperRight = $upperRightCoordinate;
+        $this->lowerLeftCoordinate = $this->getCoordinateMock();
+        $this->upperRightCoordinate = $this->getCoordinateMock();
+        $this->plateau = new Plateau($this->lowerLeftCoordinate, $this->upperRightCoordinate);
     }
 
     /**
-     * Get the lower left coordinate
-     * @return Coordinate
+     * Test that getLowerLeftCoordinate function returns the right value
      */
-    public function getLowerLeftCoordinate(): Coordinate
+    public function testThatGetLowerLeftCoordinateReturnsTheRightValue()
     {
-        return $this->lowerLeft;
+        $this->assertEquals($this->lowerLeftCoordinate, $this->plateau->getLowerLeftCoordinate());
     }
 
     /**
-     * Get the upper right coordinate
+     * Test that getUpperRightCoordinate function returns the right value
+     */
+    public function testThatGetUpperRightCoordinateReturnsTheRightValue()
+    {
+        $this->assertEquals($this->upperRightCoordinate, $this->plateau->getUpperRightCoordinate());
+    }
+
+    /**
+     * Mock Coordinate object
      * @return Coordinate
      */
-    public function getUpperRightCoordinate(): Coordinate
+    private function getCoordinateMock(): Coordinate
     {
-        return $this->upperRight;
+        $coordinate = \Mockery::mock(Coordinate::class);
+        return $coordinate;
     }
 }
