@@ -14,7 +14,7 @@ class SyncRoverPositionTest extends TestCase
     use ModelMokery;
 
     /**
-     * Test that CommandFactory class is an instance of Factory interface
+     * Test that SyncRoverPosition class is an instance of Factory interface
      */
     public function testThatSyncRoverPositionIsAnInstanceOfServiceInterface()
     {
@@ -26,7 +26,7 @@ class SyncRoverPositionTest extends TestCase
     }
 
     /**
-     * Test that CommandFactory class is an instance of Factory interface
+     * Test that consume function gives the right results for a seris of commands
      */
     public function testThatConsumeFunctionGivesTheRightResultsForASeriesOfCommands()
     {

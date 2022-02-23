@@ -61,4 +61,5 @@ function validateCoordinate(array $coordinate)
         if (isset($x) && isset($y)) return; 
     }
     echo 'Invalid coordinate';
+    exit;
 }
