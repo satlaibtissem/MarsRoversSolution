@@ -52,12 +52,12 @@ trait ModelMokeryTrait
     }
 
     /**
-     * Configure Rover coordinate
+     * Configure Rover coordinate methods expectation
      * @param Rover $rover
      * @param Coordinate $initalCoordinate
      * @return Rover
      */
-    private function configureRoverCoordinate(Rover $rover, Coordinate $initalCoordinate): Rover
+    private function configureRoverCoordinateMethodsExpectation(Rover $rover, Coordinate $initalCoordinate): Rover
     {
         $rover->shouldReceive('getCoordinate')
             ->andReturn($initalCoordinate);
@@ -68,12 +68,12 @@ trait ModelMokeryTrait
     }
 
     /**
-     * Configure Rover direction
+     * Configure Rover direction methods expectation
      * @param Rover $rover
      * @param Direction $initialDirection
      * @return Rover
      */
-    private function configureRoverDirection(Rover $rover, Direction $initialDirection): Rover
+    private function configureRoverDirectionMethodsExpectation(Rover $rover, Direction $initialDirection): Rover
     {
         $rover->shouldReceive('getDirection')
             ->andReturn($initialDirection);
@@ -84,13 +84,13 @@ trait ModelMokeryTrait
     }
 
     /**
-     * mock toString rover function
+     * add toString method expectation to rover mock
      * @param Rover $rover
      * @param Coordinate $finalCoordinate
      * @param Direction $finalDirection
      * @return Rover
      */
-    private function mockToStringRoverFunction(Rover $rover, Coordinate $finalCoordinate, Direction $finalDirection): Rover
+    private function addToStringMethodExpectationToRoverMock(Rover $rover, Coordinate $finalCoordinate, Direction $finalDirection): Rover
     {
         $rover->shouldReceive('toString')
         ->andReturn(
@@ -114,12 +114,12 @@ trait ModelMokeryTrait
         return $directionMock;
     }
 
-    /** Configure direction orientation
+    /** add setOrientation method expectation to direction mocked object
      * @param Direction $direction
      * @param string $orientation
      * @return Direction
      */
-    private function configureDirectionOrientation(Direction $direction, string $orientation): Direction
+    private function addSetOrientationExpectationToDirectionMock(Direction $direction, string $orientation): Direction
     {
         $direction->shouldReceive('setOrientation')
             ->with($orientation)

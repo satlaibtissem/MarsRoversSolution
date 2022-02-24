@@ -49,7 +49,7 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForNorthDirection()
     {
-        $rover = $this->getRoverAfterRotation(DirectionTypes::NORTH, DirectionTypes::WEST);
+        $rover = $this->configureRoverMock(DirectionTypes::NORTH, DirectionTypes::WEST);
         $this->assertEquals('1 1 ' . DirectionTypes::WEST, $rover->toString());
     }
 
@@ -58,7 +58,7 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForEastDirection()
     {
-        $rover = $this->getRoverAfterRotation(DirectionTypes::EAST, DirectionTypes::NORTH);
+        $rover = $this->configureRoverMock(DirectionTypes::EAST, DirectionTypes::NORTH);
         $this->assertEquals('1 1 ' . DirectionTypes::NORTH, $rover->toString());
     }
 
@@ -67,7 +67,7 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForSouthDirection()
     {
-        $rover = $this->getRoverAfterRotation(DirectionTypes::SOUTH, DirectionTypes::EAST);
+        $rover = $this->configureRoverMock(DirectionTypes::SOUTH, DirectionTypes::EAST);
         $this->assertEquals('1 1 ' . DirectionTypes::EAST, $rover->toString());
     }
 
@@ -76,7 +76,7 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForWestDirection()
     {
-        $rover = $this->getRoverAfterRotation(DirectionTypes::WEST, DirectionTypes::SOUTH);
+        $rover = $this->configureRoverMock(DirectionTypes::WEST, DirectionTypes::SOUTH);
         $this->assertEquals('1 1 ' . DirectionTypes::SOUTH, $rover->toString());
     }
 
@@ -85,14 +85,20 @@ class RotateLeftTest extends TestCase
      * @param string $finalDirection
      * @return Rover
      */
-    private function getRoverAfterRotation(string $initialDirection, string $finalDirection): Rover
+    private function configureRoverMock(string $initialDirection, string $finalDirection): Rover
     {
         $rover = $this->getRoverMock();
         $roverInitialDirection = $this->getDirectionMock($initialDirection);
-        $roverInitialDirection = $this->configureDirectionOrientation($roverInitialDirection, $finalDirection);
-        $rover = $this->configureRoverDirection($rover, $roverInitialDirection);
+        $roverInitialDirection = $this->addSetOrientationExpectationToDirectionMock(
+            $roverInitialDirection,
+            $finalDirection
+        );
+        $rover = $this->configureRoverDirectionMethodsExpectation(
+            $rover,
+            $roverInitialDirection
+        );
         $this->rotateLeft->execute($rover);
-        $rover = $this->mockToStringRoverFunction(
+        $rover = $this->addToStringMethodExpectationToRoverMock(
             $rover,
             $this->getCoordinateMock(1, 1),
             $this->getDirectionMock($finalDirection)

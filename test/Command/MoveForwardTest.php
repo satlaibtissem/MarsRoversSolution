@@ -28,7 +28,12 @@ class MoveForwardTest extends TestCase
     {
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $this->moveForward = new MoveForward($this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate));
+        $this->moveForward = new MoveForward(
+            $this->getPlateauMock(
+                $lowerLeftCoordinate,
+                $upperRightCoordinate
+                )
+            );
     }
 
     /**
@@ -46,7 +51,11 @@ class MoveForwardTest extends TestCase
     {
         $roverIntialCoordinate = $this->getCoordinateMock(1, 2);
         $roverFinalCoordinate = $this->getCoordinateMock(1, 3);
-        $rover = $this->configureRoverPosition(DirectionTypes::NORTH, $roverIntialCoordinate, $roverFinalCoordinate);  
+        $rover = $this->configureRoverMock(
+            DirectionTypes::NORTH,
+            $roverIntialCoordinate,
+            $roverFinalCoordinate
+        );  
         $this->assertEquals('1 3 ' . DirectionTypes::NORTH, $rover->toString());
     }
 
@@ -57,7 +66,11 @@ class MoveForwardTest extends TestCase
     {
         $roverIntialCoordinate = $this->getCoordinateMock(1, 2);
         $roverFinalCoordinate = $this->getCoordinateMock(2, 2);
-        $rover = $this->configureRoverPosition(DirectionTypes::EAST, $roverIntialCoordinate, $roverFinalCoordinate); 
+        $rover = $this->configureRoverMock(
+            DirectionTypes::EAST,
+            $roverIntialCoordinate,
+            $roverFinalCoordinate
+        ); 
         $this->assertEquals('2 2 ' . DirectionTypes::EAST, $rover->toString());
     }
 
@@ -68,7 +81,11 @@ class MoveForwardTest extends TestCase
     {
         $roverIntialCoordinate = $this->getCoordinateMock(1, 2);
         $roverFinalCoordinate = $this->getCoordinateMock(1, 1);
-        $rover = $this->configureRoverPosition(DirectionTypes::SOUTH, $roverIntialCoordinate, $roverFinalCoordinate); 
+        $rover = $this->configureRoverMock(
+            DirectionTypes::SOUTH,
+            $roverIntialCoordinate,
+            $roverFinalCoordinate
+        ); 
         $this->assertEquals('1 1 ' . DirectionTypes::SOUTH, $rover->toString());
     }
 
@@ -79,7 +96,7 @@ class MoveForwardTest extends TestCase
     {
         $roverIntialCoordinate = $this->getCoordinateMock(1, 2);
         $roverFinalCoordinate = $this->getCoordinateMock(0, 2);
-        $rover = $this->configureRoverPosition(DirectionTypes::WEST, $roverIntialCoordinate, $roverFinalCoordinate); 
+        $rover = $this->configureRoverMock(DirectionTypes::WEST, $roverIntialCoordinate, $roverFinalCoordinate); 
         $this->assertEquals('0 2 ' . DirectionTypes::WEST, $rover->toString());
     }
 
@@ -90,7 +107,7 @@ class MoveForwardTest extends TestCase
     {
         $coordinate = $this->getCoordinateMock(1, 5);
         $this->expectException(Exception::class);
-        $rover = $this->configureRoverPosition(DirectionTypes::NORTH, $coordinate, $coordinate);
+        $rover = $this->configureRoverMock(DirectionTypes::NORTH, $coordinate, $coordinate);
     }
 
     /**
@@ -100,7 +117,7 @@ class MoveForwardTest extends TestCase
     {
         $coordinate = $this->getCoordinateMock(5, 1);
         $this->expectException(Exception::class);
-        $rover = $this->configureRoverPosition(DirectionTypes::EAST, $coordinate, $coordinate);
+        $rover = $this->configureRoverMock(DirectionTypes::EAST, $coordinate, $coordinate);
     }
 
     /**
@@ -110,7 +127,7 @@ class MoveForwardTest extends TestCase
     {
         $coordinate = $this->getCoordinateMock(1, 0);
         $this->expectException(Exception::class);
-        $rover = $this->configureRoverPosition(DirectionTypes::SOUTH, $coordinate, $coordinate);
+        $rover = $this->configureRoverMock(DirectionTypes::SOUTH, $coordinate, $coordinate);
     }
 
     /**
@@ -120,7 +137,7 @@ class MoveForwardTest extends TestCase
     {
         $coordinate = $this->getCoordinateMock(0, 1);
         $this->expectException(Exception::class);
-        $rover = $this->configureRoverPosition(DirectionTypes::WEST, $coordinate, $coordinate);
+        $rover = $this->configureRoverMock(DirectionTypes::WEST, $coordinate, $coordinate);
     }
 
     /**
@@ -129,7 +146,7 @@ class MoveForwardTest extends TestCase
      * @param Coordinate $roverFinalCoordinate
      * @return Rover
      */
-    private function configureRoverPosition(string $orientation, Coordinate $roverIntialCoordinate, Coordinate $roverFinalCoordinate): Rover
+    private function configureRoverMock(string $orientation, Coordinate $roverIntialCoordinate, Coordinate $roverFinalCoordinate): Rover
     {
         $roverIntialCoordinate->shouldReceive('setY')
             ->with($roverFinalCoordinate->getY())
@@ -139,9 +156,9 @@ class MoveForwardTest extends TestCase
             ->andReturnSelf();
         $rover = $this->getRoverMock();
         $roverDirection = $this->getDirectionMock($orientation);
-        $rover = $this->configureRoverCoordinate($rover, $roverIntialCoordinate);
-        $rover = $this->configureRoverDirection($rover, $roverDirection);
-        $rover = $this->mockToStringRoverFunction($rover, $roverFinalCoordinate, $roverDirection);
+        $rover = $this->configureRoverCoordinateMethodsExpectation($rover, $roverIntialCoordinate);
+        $rover = $this->configureRoverDirectionMethodsExpectation($rover, $roverDirection);
+        $rover = $this->addToStringMethodExpectationToRoverMock($rover, $roverFinalCoordinate, $roverDirection);
         $this->moveForward->execute($rover);
         return $rover;
     }

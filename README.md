@@ -2,8 +2,6 @@
 ## Requirements:
 Run `composer install`
 
-Run `composer dump-autoload`
-
 ## How to run the program:
 `php index.php < stdin_pass.txt`
 

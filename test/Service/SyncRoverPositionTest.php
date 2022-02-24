@@ -18,7 +18,7 @@ class SyncRoverPositionTest extends TestCase
     use ModelMokeryTrait;
 
     /**
-     * Test that SyncRoverPosition class is an instance of Factory interface
+     * Test that SyncRoverPosition class is an instance of Service interface
      */
     public function testThatSyncRoverPositionIsAnInstanceOfServiceInterface()
     {
@@ -30,7 +30,7 @@ class SyncRoverPositionTest extends TestCase
     }
 
     /**
-     * Test that consume function gives the right results for a seris of commands
+     * Test that consume function gives the right results for a series of commands
      */
     public function testThatConsumeFunctionGivesTheRightResultsForASeriesOfCommands()
     {
@@ -38,7 +38,17 @@ class SyncRoverPositionTest extends TestCase
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
         $rover = $this->configureRoverPosition(1, 3, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
-        $commands = [CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::MOVE_FORWARD];
+        $commands = [
+            CommandTypes::ROTATE_LEFT,
+            CommandTypes::MOVE_FORWARD,
+            CommandTypes::ROTATE_LEFT,
+            CommandTypes::MOVE_FORWARD,
+            CommandTypes::ROTATE_LEFT,
+            CommandTypes::MOVE_FORWARD,
+            CommandTypes::ROTATE_LEFT,
+            CommandTypes::MOVE_FORWARD,
+            CommandTypes::MOVE_FORWARD
+        ];
         $invoker = $this->getInvokerMock();
         foreach ($commands as $command)
             $invoker->shouldReceive('executeCommand')
@@ -70,9 +80,9 @@ class SyncRoverPositionTest extends TestCase
         $rover = $this->getRoverMock();
         $coordinate = $this->getCoordinateMock($x, $y);
         $direction = $this->getDirectionMock($orientation);
-        $rover = $this->configureRoverCoordinate($rover, $coordinate);
-        $rover = $this->configureRoverDirection($rover, $direction);
-        $rover = $this->mockToStringRoverFunction($rover, $coordinate, $direction);
+        $rover = $this->configureRoverCoordinateMethodsExpectation($rover, $coordinate);
+        $rover = $this->configureRoverDirectionMethodsExpectation($rover, $direction);
+        $rover = $this->addToStringMethodExpectationToRoverMock($rover, $coordinate, $direction);
         return $rover;
     }
 }

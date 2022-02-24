@@ -21,7 +21,16 @@ class ApplicationTest extends TestCase
      */
     public function testThatApplicationOutputErrorMessageIfCoordinateAreNotValid()
     {
-        $output = shell_exec('php index.php < stdin_fail.txt');
+        $output = shell_exec('php index.php < stdin_fail_invalid_coordinate.txt');
         $this->assertSame('Invalid coordinate', $output);  
+    }
+
+    /**
+     * Test that application output error message if rover can't move
+     */
+    public function testThatApplicationOutputErrorMessageIfRoverCantMove()
+    {
+        $output = shell_exec('php index.php < stdin_fail_rover_cant_move.txt');
+        $this->assertSame('Rover can\'t move', $output);  
     }
 }

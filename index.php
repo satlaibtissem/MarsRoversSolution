@@ -11,11 +11,6 @@ use DI\ContainerBuilder;
 require_once __DIR__ . '/vendor/autoload.php';
 
 if (STDIN) {
-    $containerBuilder = new ContainerBuilder();
-    $containerBuilder->useAutowiring(true);
-    $containerBuilder->addDefinitions(__DIR__.'/config.php');
-    $container = $containerBuilder->build();
-
     $plateauInputLine = fgets(STDIN);
     $plateauBorders = explode(' ', $plateauInputLine);
     validateCoordinate($plateauBorders);
@@ -25,7 +20,7 @@ if (STDIN) {
     );
     $roverSquad = [];
     $commandInput = 0;
-    $service = $container->make(ServiceInterface::class, ['plateau' => $plateau]);
+    $service = getServiceInterfaceInstance(['plateau' => $plateau]);
     while (($input = fgets(STDIN)) !== false) {
         if ($commandInput === 0) {
             $inputLine = explode(' ', $input);
@@ -39,7 +34,12 @@ if (STDIN) {
         } elseif ($commandInput == 1) {
             $commands = str_split(trim($input));
             $rover = $roverSquad[count($roverSquad) - 1];
-            $service->consume($rover, $commands);
+            try {
+                $service->consume($rover, $commands);
+            } catch (Exception $exception){
+                echo $exception->getMessage();
+                exit;
+            }
             $roverSquad[count($roverSquad) - 1] = $rover;
             $commandInput = 0;
         }
@@ -52,6 +52,22 @@ if (STDIN) {
     }
 }
 
+/**
+ * @param array $args
+ * @return ServiceInterface
+ */
+function getServiceInterfaceInstance(array $args): ServiceInterface
+{
+    $containerBuilder = new ContainerBuilder();
+    $containerBuilder->useAutowiring(true);
+    $containerBuilder->addDefinitions(__DIR__ . '/config.php');
+    $container = $containerBuilder->build();
+    return $container->make(ServiceInterface::class, $args);
+}
+
+/**
+ * @param array $coordinate
+ */
 function validateCoordinate(array $coordinate)
 {
     if (count($coordinate) >= 2)

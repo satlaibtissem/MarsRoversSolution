@@ -35,14 +35,14 @@ class CommandExecuterTest extends TestCase
         $factory = $this->getFactoryMock();
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::NORTH);
+        $rover = $this->configureRoverMock(1, 2, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
         $factory->shouldReceive('createCommand')
             ->with(
                 CommandTypes::MOVE_FORWARD,
                 ['plateau' => $plateau]
             )
-            ->andReturn($this->getCommandMock($rover));
+            ->andReturn($this->getCommandInterfaceMock($rover));
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::MOVE_FORWARD, $rover, $plateau);
@@ -55,14 +55,14 @@ class CommandExecuterTest extends TestCase
     public function testThatExecuteCommandGivesTheRightResultsForRotateLeftCommand()
     {
         $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::WEST);
+        $rover = $this->configureRoverMock(1, 2, DirectionTypes::WEST);
         $plateau = \Mockery::mock(Plateau::class);
         $factory->shouldReceive('createCommand')
             ->with(
                 CommandTypes::ROTATE_LEFT,
                 ['plateau' => $plateau]
             )
-            ->andReturn($this->getCommandMock($rover));
+            ->andReturn($this->getCommandInterfaceMock($rover));
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::ROTATE_LEFT, $rover, $plateau);
@@ -75,14 +75,14 @@ class CommandExecuterTest extends TestCase
     public function testThatExecuteCommandGivesTheRightResultsForRotateRightCommand()
     {
         $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::EAST);
+        $rover = $this->configureRoverMock(1, 2, DirectionTypes::EAST);
         $plateau = \Mockery::mock(Plateau::class);
         $factory->shouldReceive('createCommand')
             ->with(
                 CommandTypes::ROTATE_RIGHT,
                 ['plateau' => $plateau]
             )
-            ->andReturn($this->getCommandMock($rover));
+            ->andReturn($this->getCommandInterfaceMock($rover));
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::ROTATE_RIGHT, $rover, $plateau);
@@ -101,7 +101,7 @@ class CommandExecuterTest extends TestCase
      * @param Rover $rover
      * @return CommandInterface
      */
-    private function getCommandMock(Rover $rover): CommandInterface
+    private function getCommandInterfaceMock(Rover $rover): CommandInterface
     {
         $moveForward = \Mockery::mock(CommandInterface::class);
         $moveForward->shouldReceive('execute')
@@ -111,20 +111,20 @@ class CommandExecuterTest extends TestCase
     }
 
     /**
-     * Configure rover position
+     * Configure rover mock
      * @param int $x
      * @param int $y
      * @param string $orientation
      * @return Rover
      */
-    private function configureRoverPosition(int $x, int $y, string $orientation): Rover
+    private function configureRoverMock(int $x, int $y, string $orientation): Rover
     {
         $rover = $this->getRoverMock();
         $coordinate = $this->getCoordinateMock($x, $y);
         $direction = $this->getDirectionMock($orientation);
-        $rover = $this->configureRoverCoordinate($rover, $coordinate);
-        $rover = $this->configureRoverDirection($rover, $direction);
-        $rover = $this->mockToStringRoverFunction($rover, $coordinate, $direction);
+        $rover = $this->configureRoverCoordinateMethodsExpectation($rover, $coordinate);
+        $rover = $this->configureRoverDirectionMethodsExpectation($rover, $direction);
+        $rover = $this->addToStringMethodExpectationToRoverMock($rover, $coordinate, $direction);
         return $rover;
     }
 }
