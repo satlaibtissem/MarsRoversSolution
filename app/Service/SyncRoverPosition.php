@@ -2,26 +2,26 @@
 
 namespace App\Service;
 
-use App\Invoker\Invoker;
+use App\Invoker\InvokerInterface;
 use App\Model\Plateau;
 use App\Model\Rover;
 
-class SyncRoverPosition implements Service
+class SyncRoverPosition implements ServiceInterface
 {
     /**
      * @var Plateau
      */
     private $plateau;
     /**
-     * @var Invoker
+     * @var InvokerInterface
      */
     private $invoker;
 
     /**
-     * @param Invoker $invoker
+     * @param InvokerInterface $invoker
      * @param Plateau $plateau
      */
-    public function __construct(Invoker $invoker, Plateau $plateau)
+    public function __construct(InvokerInterface $invoker, Plateau $plateau)
     {
         $this->invoker = $invoker;
         $this->plateau = $plateau;

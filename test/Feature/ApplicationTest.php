@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Invoker;
+namespace Test\Feature;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationTest extends TestCase

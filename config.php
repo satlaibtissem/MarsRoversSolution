@@ -1,14 +1,14 @@
 <?php
 
 use App\Command\CommandFactory;
-use App\Command\Factory;
+use App\Command\FactoryInterface;
 use App\Invoker\CommandExecuter;
-use App\Invoker\Invoker;
-use App\Service\Service;
+use App\Invoker\InvokerInterface;
+use App\Service\ServiceInterface;
 use App\Service\SyncRoverPosition;
 
 return [
-    Invoker::class => DI\autowire(CommandExecuter::class),
-    Factory::class => DI\autowire(CommandFactory::class),
-    Service::class => DI\autowire(SyncRoverPosition::class)
+    InvokerInterface::class => DI\autowire(CommandExecuter::class),
+    FactoryInterface::class => DI\autowire(CommandFactory::class),
+    ServiceInterface::class => DI\autowire(SyncRoverPosition::class)
   ];

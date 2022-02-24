@@ -5,7 +5,7 @@ namespace App\Invoker;
 use App\Model\Plateau;
 use App\Model\Rover;
 
-interface Invoker
+interface InvokerInterface
 {
     /**
      * @param string $command

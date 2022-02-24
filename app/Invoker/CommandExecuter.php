@@ -2,21 +2,21 @@
 
 namespace App\Invoker;
 
-use App\Command\Factory;
+use App\Command\FactoryInterface;
 use App\Model\Plateau;
 use App\Model\Rover;
 
-class CommandExecuter implements Invoker
+class CommandExecuter implements InvokerInterface
 {
     /**
-     * @var Factory
+     * @var FactoryInterface
      */
     private $commandFactory;
 
     /**
-     * @param Factory $commandFactory
+     * @param FactoryInterface $commandFactory
      */
-    public function __construct(Factory $commandFactory)
+    public function __construct(FactoryInterface $commandFactory)
     {
         $this->commandFactory = $commandFactory;
     }

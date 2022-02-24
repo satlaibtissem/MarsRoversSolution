@@ -1,18 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Test\Command;
 
-use App\Command\Command;
+use App\Command\CommandInterface;
 use App\Command\Rotatable;
 use App\Command\RotateRight;
-use App\Model\Direction;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokery;
+use Test\Traits\ModelMokeryTrait;
 
 class RotateRightTest extends TestCase
 {
-    use ModelMokery;
+    use ModelMokeryTrait;
 
     /**
      * @var RotateRight
@@ -32,7 +32,7 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandIsAnInstanceOfCommandInterface()
     {
-        $this->assertInstanceOf(Command::class, $this->rotateRight);
+        $this->assertInstanceOf(CommandInterface::class, $this->rotateRight);
     }
 
     /**

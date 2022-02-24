@@ -3,13 +3,13 @@
 namespace App\Command;
 
 
-interface Factory
+interface FactoryInterface
 {
     /**
      * Create a command based on a commad type
      * @param string $commandType
      * @param array $args
-     * @return Command
+     * @return CommandInterface
      */
-    public function createCommand(string $commandType, array $args = []): Command;
+    public function createCommand(string $commandType, array $args = []): CommandInterface;
 }

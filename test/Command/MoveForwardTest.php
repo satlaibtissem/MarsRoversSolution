@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace Test\Command;
 
-use App\Command\Command;
+use App\Command\CommandInterface;
 use App\Command\MoveForward;
 use App\Model\Coordinate;
 use App\Model\Rover;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokery;
+use Test\Traits\ModelMokeryTrait;
 
 class MoveForwardTest extends TestCase
 {
-    use ModelMokery;
+    use ModelMokeryTrait;
 
      /**
      * @var MoveForward
@@ -35,7 +35,7 @@ class MoveForwardTest extends TestCase
      */
     public function testThatMoveForwardCommandIsAnInstanceOfCommandInterface()
     {
-        $this->assertInstanceOf(Command::class, $this->moveForward);
+        $this->assertInstanceOf(CommandInterface::class, $this->moveForward);
     }
 
     /**

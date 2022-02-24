@@ -8,7 +8,7 @@ use App\Model\Plateau;
 use App\Model\Rover;
 use Exception;
 
-class MoveForward implements Command
+class MoveForward implements CommandInterface
 {
     /**
      * @var Plateau

@@ -1,20 +1,20 @@
 <?php
-
+declare(strict_types=1);
 namespace Test\Command;
 
 use App\Command\CommandFactory;
-use App\Command\Factory;
+use App\Command\FactoryInterface;
 use App\Command\MoveForward;
 use App\Command\RotateLeft;
 use App\Command\RotateRight;
 use App\Data\CommandTypes;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokery;
+use Test\Traits\ModelMokeryTrait;
 
 class CommandFactoryTest extends TestCase
 {
-    use ModelMokery;
+    use ModelMokeryTrait;
 
     /**
      * @var CommandFactory
@@ -34,7 +34,7 @@ class CommandFactoryTest extends TestCase
      */
     public function testThatCommandFactoryIsAnInstanceOfFctoryInterface()
     {
-        $this->assertInstanceOf(Factory::class, $this->factory);
+        $this->assertInstanceOf(FactoryInterface::class, $this->factory);
     }
 
     /**

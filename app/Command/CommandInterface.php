@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Model\Rover;
 
-interface Command
+interface CommandInterface
 {
     /**
      * Execute command

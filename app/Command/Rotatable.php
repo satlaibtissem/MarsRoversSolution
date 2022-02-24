@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Model\Rover;
 
-abstract class Rotatable implements Command
+abstract class Rotatable implements CommandInterface
 {
     /**
      * Rotate in a specific direction

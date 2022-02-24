@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Model\Rover;
 
-interface Service
+interface ServiceInterface
 {
     /**
      * Consume service

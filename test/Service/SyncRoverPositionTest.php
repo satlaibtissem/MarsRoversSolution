@@ -1,17 +1,19 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Invoker;
+namespace Test\Service;
 
+use App\Invoker\InvokerInterface;
 use App\Model\Plateau;
 use App\Model\Rover;
-use App\Service\Service;
+use App\Service\ServiceInterface;
 use App\Service\SyncRoverPosition;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokery;
+use Test\Traits\ModelMokeryTrait;
 
 class SyncRoverPositionTest extends TestCase
 {
-    use ModelMokery;
+    use ModelMokeryTrait;
 
     /**
      * Test that SyncRoverPosition class is an instance of Factory interface
@@ -22,7 +24,7 @@ class SyncRoverPositionTest extends TestCase
             $this->getInvokerMock(),
             \Mockery::mock(Plateau::class)
         );
-        $this->assertInstanceOf(Service::class, $service);
+        $this->assertInstanceOf(ServiceInterface::class, $service);
     }
 
     /**
@@ -49,9 +51,9 @@ class SyncRoverPositionTest extends TestCase
      * Mock Invoker interface
      * @return Invoker
      */
-    private function getInvokerMock(): Invoker
+    private function getInvokerMock(): InvokerInterface
     {
-        return \Mockery::mock(Invoker::class);
+        return \Mockery::mock(InvokerInterface::class);
     }
 
     /**

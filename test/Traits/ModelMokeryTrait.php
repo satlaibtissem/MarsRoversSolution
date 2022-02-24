@@ -6,7 +6,7 @@ use App\Model\Direction;
 use App\Model\Plateau;
 use App\Model\Rover;
 
-trait ModelMokery
+trait ModelMokeryTrait
 {
 
     /**

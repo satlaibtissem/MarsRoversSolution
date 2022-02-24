@@ -4,12 +4,12 @@ namespace App\Command;
 
 use App\Data\CommandTypes;
 
-class CommandFactory implements Factory
+class CommandFactory implements FactoryInterface
 {
     /**
      * @inheritDoc
      */
-    public function createCommand(string $commandType, array $args = []): Command
+    public function createCommand(string $commandType, array $args = []): CommandInterface
     {
         switch ($commandType) {
             case CommandTypes::MOVE_FORWARD:

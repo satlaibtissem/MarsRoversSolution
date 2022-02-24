@@ -5,7 +5,7 @@ use App\Model\Coordinate;
 use App\Model\Direction;
 use App\Model\Plateau;
 use App\Model\Rover;
-use App\Service\Service;
+use App\Service\ServiceInterface;
 use DI\ContainerBuilder;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -25,7 +25,7 @@ if (STDIN) {
     );
     $roverSquad = [];
     $commandInput = 0;
-    $service = $container->make(Service::class, ['plateau' => $plateau]);
+    $service = $container->make(ServiceInterface::class, ['plateau' => $plateau]);
     while (($input = fgets(STDIN)) !== false) {
         if ($commandInput === 0) {
             $inputLine = explode(' ', $input);

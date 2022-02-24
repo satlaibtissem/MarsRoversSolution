@@ -1,29 +1,33 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Invoker;
+namespace Test\Invoker;
 
-use App\Command\Command;
-use App\Command\Factory;
+use App\Command\CommandInterface;
+use App\Command\FactoryInterface;
 use App\Data\CommandTypes;
+use App\Invoker\CommandExecuter;
+use App\Invoker\InvokerInterface;
+use App\Model\Plateau;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokery;
+use Test\Traits\ModelMokeryTrait;
 
 class CommandExecuterTest extends TestCase
 {
-    use ModelMokery;
+    use ModelMokeryTrait;
 
     /**
-     * Test that CommandFactory class is an instance of Factory interface
+     * Test that CommandExecuter class is an instance of Invoker interface
      */
     public function testThatCommandExecuterIsAnInstanceOfInvokerInterface()
     {
         $commandExecuter = new CommandExecuter($this->getFactoryMock());
-        $this->assertInstanceOf(Invoker::class, $commandExecuter);
+        $this->assertInstanceOf(InvokerInterface::class, $commandExecuter);
     }
 
     /**
-     * Test that CommandFactory class is an instance of Factory interface
+     * Test that CommandExecuter class gives the right results for MoveForward Command
      */
     public function testThatExecuteCommandGivesTheRightResultsForMoveForwardCommand()
     {
@@ -37,7 +41,7 @@ class CommandExecuterTest extends TestCase
                 CommandTypes::MOVE_FORWARD,
                 ['plateau' => $plateau]
             )
-            ->andReturn($this->getMoveForwardMock($rover));
+            ->andReturn($this->getCommandMock($rover));
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::MOVE_FORWARD, $rover, $plateau);
@@ -45,20 +49,60 @@ class CommandExecuterTest extends TestCase
     }
 
     /**
+     * Test that CommandExecuter class gives the right results for RotateLeft Command
+     */
+    public function testThatExecuteCommandGivesTheRightResultsForRotateLeftCommand()
+    {
+        $factory = $this->getFactoryMock();
+        $rover = $this->configureRoverPosition(1, 2, 'W');
+        $plateau = \Mockery::mock(Plateau::class);
+        $factory->shouldReceive('createCommand')
+            ->with(
+                CommandTypes::ROTATE_LEFT,
+                ['plateau' => $plateau]
+            )
+            ->andReturn($this->getCommandMock($rover));
+        
+        $commandExecuter = new CommandExecuter($factory);
+        $commandExecuter->executeCommand(CommandTypes::ROTATE_LEFT, $rover, $plateau);
+        $this->assertEquals('1 2 W', $rover->toString());
+    }
+
+    /**
+     * Test that CommandExecuter class gives the right results for RotateRight Command
+     */
+    public function testThatExecuteCommandGivesTheRightResultsForRotateRightCommand()
+    {
+        $factory = $this->getFactoryMock();
+        $rover = $this->configureRoverPosition(1, 2, 'E');
+        $plateau = \Mockery::mock(Plateau::class);
+        $factory->shouldReceive('createCommand')
+            ->with(
+                CommandTypes::ROTATE_RIGHT,
+                ['plateau' => $plateau]
+            )
+            ->andReturn($this->getCommandMock($rover));
+        
+        $commandExecuter = new CommandExecuter($factory);
+        $commandExecuter->executeCommand(CommandTypes::ROTATE_RIGHT, $rover, $plateau);
+        $this->assertEquals('1 2 E', $rover->toString());
+    }
+
+    /**
      * Mock Factory interface
      */
-    private function getFactoryMock(): Factory
+    private function getFactoryMock(): FactoryInterface
     {
-        return \Mockery::mock(Factory::class);
+        return \Mockery::mock(FactoryInterface::class);
     }
 
     /**
      * @param Rover $rover
-     * @return Command
+     * @return CommandInterface
      */
-    private function getMoveForwardMock(Rover $rover): Command
+    private function getCommandMock(Rover $rover): CommandInterface
     {
-        $moveForward = \Mockery::mock(Command::class);
+        $moveForward = \Mockery::mock(CommandInterface::class);
         $moveForward->shouldReceive('execute')
             ->with($rover)
             ->andReturnSelf();
