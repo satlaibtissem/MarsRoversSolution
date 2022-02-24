@@ -2,6 +2,7 @@
 
 namespace Test\Feature;
 
+use App\Data\DirectionTypes;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationTest extends TestCase
@@ -12,7 +13,7 @@ class ApplicationTest extends TestCase
     public function testThatApplicationOutputIsCorrect()
     {
         $output = shell_exec('php index.php < stdin_pass.txt');
-        $this->assertSame("1 3 N\n5 1 E", $output);  
+        $this->assertSame("1 3 " . DirectionTypes::NORTH . "\n5 1 " . DirectionTypes::EAST, $output);  
     }
 
     /**

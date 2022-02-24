@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Test\Service;
 
+use App\Data\CommandTypes;
+use App\Data\DirectionTypes;
 use App\Invoker\InvokerInterface;
 use App\Model\Plateau;
 use App\Model\Rover;
@@ -34,9 +36,9 @@ class SyncRoverPositionTest extends TestCase
     {
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $rover = $this->configureRoverPosition(1, 3, 'N');
+        $rover = $this->configureRoverPosition(1, 3, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
-        $commands = ['L', 'M', 'L', 'M', 'L', 'M', 'L', 'M', 'M'];
+        $commands = [CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::ROTATE_LEFT, CommandTypes::MOVE_FORWARD, CommandTypes::MOVE_FORWARD];
         $invoker = $this->getInvokerMock();
         foreach ($commands as $command)
             $invoker->shouldReceive('executeCommand')

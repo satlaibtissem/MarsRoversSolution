@@ -6,6 +6,7 @@ namespace Test\Command;
 use App\Command\CommandInterface;
 use App\Command\Rotatable;
 use App\Command\RotateRight;
+use App\Data\DirectionTypes;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
 use Test\Traits\ModelMokeryTrait;
@@ -48,8 +49,8 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandReturnsTheRightDirectionForNorthDirection()
     {
-        $rover = $this->getRoverAfterRotation('N', 'E');
-        $this->assertEquals('1 1 E', $rover->toString());
+        $rover = $this->getRoverAfterRotation(DirectionTypes::NORTH, DirectionTypes::EAST);
+        $this->assertEquals('1 1 ' . DirectionTypes::EAST, $rover->toString());
     }
 
     /**
@@ -57,8 +58,8 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandReturnsTheRightDirectionForEastDirection()
     {
-        $rover = $this->getRoverAfterRotation('E', 'S');
-        $this->assertEquals('1 1 S', $rover->toString());
+        $rover = $this->getRoverAfterRotation(DirectionTypes::EAST, DirectionTypes::SOUTH);
+        $this->assertEquals('1 1 ' . DirectionTypes::SOUTH, $rover->toString());
     }
 
     /**
@@ -66,8 +67,8 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandReturnsTheRightDirectionForSouthDirection()
     {
-        $rover = $this->getRoverAfterRotation('S', 'W');
-        $this->assertEquals('1 1 W', $rover->toString());
+        $rover = $this->getRoverAfterRotation(DirectionTypes::SOUTH, DirectionTypes::WEST);
+        $this->assertEquals('1 1 ' . DirectionTypes::WEST, $rover->toString());
     }
 
     /**
@@ -75,8 +76,8 @@ class RotateRightTest extends TestCase
      */
     public function testThatRotateRightCommandReturnsTheRightDirectionForWestDirection()
     {
-        $rover = $this->getRoverAfterRotation('W', 'N');
-        $this->assertEquals('1 1 N', $rover->toString());
+        $rover = $this->getRoverAfterRotation(DirectionTypes::WEST, DirectionTypes::NORTH);
+        $this->assertEquals('1 1 ' . DirectionTypes::NORTH, $rover->toString());
     }
 
     /**

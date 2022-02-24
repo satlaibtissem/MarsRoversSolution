@@ -6,6 +6,7 @@ namespace Test\Invoker;
 use App\Command\CommandInterface;
 use App\Command\FactoryInterface;
 use App\Data\CommandTypes;
+use App\Data\DirectionTypes;
 use App\Invoker\CommandExecuter;
 use App\Invoker\InvokerInterface;
 use App\Model\Plateau;
@@ -34,7 +35,7 @@ class CommandExecuterTest extends TestCase
         $factory = $this->getFactoryMock();
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $rover = $this->configureRoverPosition(1, 2, 'N');
+        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
         $factory->shouldReceive('createCommand')
             ->with(
@@ -45,7 +46,7 @@ class CommandExecuterTest extends TestCase
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::MOVE_FORWARD, $rover, $plateau);
-        $this->assertEquals('1 2 N', $rover->toString());
+        $this->assertEquals('1 2 ' . DirectionTypes::NORTH, $rover->toString());
     }
 
     /**
@@ -54,7 +55,7 @@ class CommandExecuterTest extends TestCase
     public function testThatExecuteCommandGivesTheRightResultsForRotateLeftCommand()
     {
         $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverPosition(1, 2, 'W');
+        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::WEST);
         $plateau = \Mockery::mock(Plateau::class);
         $factory->shouldReceive('createCommand')
             ->with(
@@ -65,7 +66,7 @@ class CommandExecuterTest extends TestCase
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::ROTATE_LEFT, $rover, $plateau);
-        $this->assertEquals('1 2 W', $rover->toString());
+        $this->assertEquals('1 2 ' . DirectionTypes::WEST, $rover->toString());
     }
 
     /**
@@ -74,7 +75,7 @@ class CommandExecuterTest extends TestCase
     public function testThatExecuteCommandGivesTheRightResultsForRotateRightCommand()
     {
         $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverPosition(1, 2, 'E');
+        $rover = $this->configureRoverPosition(1, 2, DirectionTypes::EAST);
         $plateau = \Mockery::mock(Plateau::class);
         $factory->shouldReceive('createCommand')
             ->with(
@@ -85,7 +86,7 @@ class CommandExecuterTest extends TestCase
         
         $commandExecuter = new CommandExecuter($factory);
         $commandExecuter->executeCommand(CommandTypes::ROTATE_RIGHT, $rover, $plateau);
-        $this->assertEquals('1 2 E', $rover->toString());
+        $this->assertEquals('1 2 ' . DirectionTypes::EAST, $rover->toString());
     }
 
     /**

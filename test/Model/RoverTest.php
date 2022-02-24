@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace Test\Model;
 
+use App\Data\DirectionTypes;
 use App\Model\Coordinate;
 use App\Model\Direction;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
-
+use Test\Traits\ModelMokeryTrait;
 
 class RoverTest extends TestCase
 {
+    use ModelMokeryTrait;
 
    /**
      * @var Coordinate
@@ -30,8 +32,8 @@ class RoverTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->coordinate = $this->getCoordinateMock();
-        $this->direction = $this->getDirectionMock();
+        $this->coordinate = $this->getCoordinateMock(1, 2);
+        $this->direction = $this->getDirectionMock(DirectionTypes::NORTH);
         $this->rover = new Rover($this->coordinate, $this->direction);
     }
 
@@ -56,7 +58,7 @@ class RoverTest extends TestCase
      */
     public function testThatSetCoordinateChangesTheCoordinateOfRover()
     {
-        $this->coordinate = $this->getCoordinateMock();
+        $this->coordinate = $this->getCoordinateMock(1, 2);
         $this->rover->setCoordinate($this->coordinate);
         $this->assertEquals($this->coordinate, $this->rover->getCoordinate());
     }
@@ -66,7 +68,7 @@ class RoverTest extends TestCase
      */
     public function testThatSetDirectionChangesTheDirectionOfRover()
     {
-        $this->direction = $this->getDirectionMock();
+        $this->direction = $this->getDirectionMock(DirectionTypes::NORTH);
         $this->rover->setDirection($this->direction);
         $this->assertEquals($this->direction, $this->rover->getDirection());
     }
@@ -76,33 +78,10 @@ class RoverTest extends TestCase
      */
     public function testThatToStringFunctionReturnsTheRightValue()
     {
-        $this->coordinate = $this->getCoordinateMock();
-        $this->coordinate->shouldReceive('getX')->andReturn(1);
-        $this->coordinate->shouldReceive('getY')->andReturn(1);
+        $this->coordinate = $this->getCoordinateMock(1, 2);
         $this->rover->setCoordinate($this->coordinate);
-        $this->direction = $this->getDirectionMock();
-        $this->direction->shouldReceive('getOrientation')->andReturn('N');
+        $this->direction = $this->getDirectionMock(DirectionTypes::NORTH);
         $this->rover->setDirection($this->direction);
-        $this->assertEquals('1 1 N', $this->rover->toString());
-    }
-
-    /**
-     * Mock Coordinate object
-     * @return Coordinate
-     */
-    private function getCoordinateMock(): Coordinate
-    {
-        $coordinate = \Mockery::mock(Coordinate::class);
-        return $coordinate;
-    }
-
-    /**
-     * Mock Direction object
-     * @return Direction
-     */
-    private function getDirectionMock(): Direction
-    {
-        $directionMock = \Mockery::mock(Direction::class);
-        return $directionMock;
+        $this->assertEquals('1 2 ' . DirectionTypes::NORTH, $this->rover->toString());
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Test\Model;
 
+use App\Data\DirectionTypes;
 use App\Model\Direction;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -16,9 +17,8 @@ class DirectionTest extends TestCase
      */
     public function testThatGetOrientationReturnsTheRightValue()
     {
-        $orientation = 'N';
-        $direction = new Direction($orientation);
-        $this->assertEquals($orientation, $direction->getOrientation());
+        $direction = new Direction(DirectionTypes::NORTH);
+        $this->assertEquals(DirectionTypes::NORTH, $direction->getOrientation());
     }
 
     /**
@@ -26,10 +26,9 @@ class DirectionTest extends TestCase
      */
     public function testThatSetOrientationChangesTheOrientation()
     {
-        $newOrientation = 'W';
-        $direction = new Direction('N');
-        $direction->setOrientation($newOrientation);
-        $this->assertEquals($newOrientation, $direction->getOrientation());
+        $direction = new Direction(DirectionTypes::NORTH);
+        $direction->setOrientation(DirectionTypes::WEST);
+        $this->assertEquals(DirectionTypes::WEST, $direction->getOrientation());
     }
 
     /**
@@ -38,6 +37,6 @@ class DirectionTest extends TestCase
     public function testThatPassingTheWrongDirectionThrowsAnException()
     {
         $this->expectException(Exception::class);
-        $direction = new Direction('F');
+        new Direction('F');
     }
 }
