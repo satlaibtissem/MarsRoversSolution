@@ -19,11 +19,16 @@ class CommandExecuterTest extends TestCase
     use ModelMokeryTrait;
 
     /**
+     * @var Rover
+     */
+    private $rover;
+
+    /**
      * Test that CommandExecuter class is an instance of Invoker interface
      */
     public function testThatCommandExecuterIsAnInstanceOfInvokerInterface()
     {
-        $commandExecuter = new CommandExecuter($this->getFactoryMock());
+        $commandExecuter = new CommandExecuter(\Mockery::mock(FactoryInterface::class));
         $this->assertInstanceOf(InvokerInterface::class, $commandExecuter);
     }
 
@@ -32,21 +37,16 @@ class CommandExecuterTest extends TestCase
      */
     public function testThatExecuteCommandGivesTheRightResultsForMoveForwardCommand()
     {
-        $factory = $this->getFactoryMock();
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $rover = $this->configureRoverMock(1, 2, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
-        $factory->shouldReceive('createCommand')
-            ->with(
-                CommandTypes::MOVE_FORWARD,
-                ['plateau' => $plateau]
-            )
-            ->andReturn($this->getCommandInterfaceMock($rover));
-        
-        $commandExecuter = new CommandExecuter($factory);
-        $commandExecuter->executeCommand(CommandTypes::MOVE_FORWARD, $rover, $plateau);
-        $this->assertEquals('1 2 ' . DirectionTypes::NORTH, $rover->toString());
+        $this->executeCommand(
+            CommandTypes::MOVE_FORWARD,
+            1, 2,
+            DirectionTypes::NORTH,
+            $plateau
+        );
+        $this->assertEquals('1 2 ' . DirectionTypes::NORTH, $this->rover->toString());
     }
 
     /**
@@ -54,19 +54,13 @@ class CommandExecuterTest extends TestCase
      */
     public function testThatExecuteCommandGivesTheRightResultsForRotateLeftCommand()
     {
-        $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverMock(1, 2, DirectionTypes::WEST);
-        $plateau = \Mockery::mock(Plateau::class);
-        $factory->shouldReceive('createCommand')
-            ->with(
-                CommandTypes::ROTATE_LEFT,
-                ['plateau' => $plateau]
-            )
-            ->andReturn($this->getCommandInterfaceMock($rover));
-        
-        $commandExecuter = new CommandExecuter($factory);
-        $commandExecuter->executeCommand(CommandTypes::ROTATE_LEFT, $rover, $plateau);
-        $this->assertEquals('1 2 ' . DirectionTypes::WEST, $rover->toString());
+        $this->executeCommand(
+            CommandTypes::ROTATE_LEFT,
+            1, 2,
+            DirectionTypes::WEST,
+            $this->getPlateauMock()
+        );
+        $this->assertEquals('1 2 ' . DirectionTypes::WEST, $this->rover->toString());
     }
 
     /**
@@ -74,57 +68,71 @@ class CommandExecuterTest extends TestCase
      */
     public function testThatExecuteCommandGivesTheRightResultsForRotateRightCommand()
     {
-        $factory = $this->getFactoryMock();
-        $rover = $this->configureRoverMock(1, 2, DirectionTypes::EAST);
-        $plateau = \Mockery::mock(Plateau::class);
-        $factory->shouldReceive('createCommand')
-            ->with(
-                CommandTypes::ROTATE_RIGHT,
-                ['plateau' => $plateau]
-            )
-            ->andReturn($this->getCommandInterfaceMock($rover));
-        
-        $commandExecuter = new CommandExecuter($factory);
-        $commandExecuter->executeCommand(CommandTypes::ROTATE_RIGHT, $rover, $plateau);
-        $this->assertEquals('1 2 ' . DirectionTypes::EAST, $rover->toString());
+        $this->executeCommand(
+            CommandTypes::ROTATE_RIGHT,
+            1, 2,
+            DirectionTypes::EAST,
+            $this->getPlateauMock()
+        );
+        $this->assertEquals('1 2 ' . DirectionTypes::EAST, $this->rover->toString());
     }
 
     /**
      * Mock Factory interface
+     * @param string $commandType
+     * @param array $args
+     * @return FactoryInterface
      */
-    private function getFactoryMock(): FactoryInterface
+    private function getFactoryMock(string $commandType, array $args = []): FactoryInterface
     {
-        return \Mockery::mock(FactoryInterface::class);
+        $factory = \Mockery::mock(FactoryInterface::class);
+        $factory->shouldReceive('createCommand')
+            ->with(
+                $commandType,
+                $args
+            )
+            ->andReturn($this->getCommandInterfaceMock());
+        return $factory;
     }
 
     /**
-     * @param Rover $rover
      * @return CommandInterface
      */
-    private function getCommandInterfaceMock(Rover $rover): CommandInterface
+    private function getCommandInterfaceMock(): CommandInterface
     {
-        $moveForward = \Mockery::mock(CommandInterface::class);
-        $moveForward->shouldReceive('execute')
-            ->with($rover)
+        $command = \Mockery::mock(CommandInterface::class);
+        $command->shouldReceive('execute')
+            ->with($this->rover)
             ->andReturnSelf();
-        return $moveForward;
+        return $command;
     }
 
     /**
      * Configure rover mock
+     * @param string $commandType
      * @param int $x
      * @param int $y
      * @param string $orientation
-     * @return Rover
+     * @param Plateau $plateau
      */
-    private function configureRoverMock(int $x, int $y, string $orientation): Rover
+    private function executeCommand(
+        string $commandType,
+        int $x,
+        int $y,
+        string $orientation,
+        Plateau $plateau
+    )
     {
-        $rover = $this->getRoverMock();
         $coordinate = $this->getCoordinateMock($x, $y);
         $direction = $this->getDirectionMock($orientation);
-        $rover = $this->configureRoverCoordinateMethodsExpectation($rover, $coordinate);
-        $rover = $this->configureRoverDirectionMethodsExpectation($rover, $direction);
-        $rover = $this->addToStringMethodExpectationToRoverMock($rover, $coordinate, $direction);
-        return $rover;
+        $this->rover = $this->configureRoverMock(
+            $coordinate,
+            $coordinate,
+            $direction,
+            $direction
+        );
+        $factory = $this->getFactoryMock($commandType, ['plateau' => $plateau]);
+        $commandExecuter = new CommandExecuter($factory);
+        $commandExecuter->executeCommand($commandType, $this->rover, $plateau);
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Test\Traits;
 
 use App\Model\Coordinate;
@@ -15,13 +17,18 @@ trait ModelMokeryTrait
      * @param Coordinate $upperRightCoordinate
      * @return Plateau
      */
-    private function getPlateauMock(Coordinate $lowerLeftCoordinate, Coordinate $upperRightCoordinate): Plateau
+    private function getPlateauMock(
+        Coordinate $lowerLeftCoordinate = null,
+        Coordinate $upperRightCoordinate = null
+    ): Plateau
     {
         $plateau = \Mockery::mock(Plateau::class);
-        $plateau->shouldReceive('getLowerLeftCoordinate')
-            ->andReturn($lowerLeftCoordinate);
-        $plateau->shouldReceive('getUpperRightCoordinate')
-            ->andReturn($upperRightCoordinate);
+        if (isset($lowerLeftCoordinate))
+            $plateau->shouldReceive('getLowerLeftCoordinate')
+                ->andReturn($lowerLeftCoordinate);
+        if (isset($upperRightCoordinate))
+            $plateau->shouldReceive('getUpperRightCoordinate')
+                ->andReturn($upperRightCoordinate);
         return $plateau;
     }
 
@@ -41,7 +48,31 @@ trait ModelMokeryTrait
         return $coordinate;
     }
 
-     /**
+    /**
+     * Add setX expectation to coordinate mocked object
+     * @param Coordinate $coordinate
+     * @param int $x
+     */
+    private function addSetXExpectationToCoordinateMock(Coordinate $coordinate, int $x)
+    {
+        $coordinate->shouldReceive('setX')
+            ->with($x)
+            ->andReturnSelf();
+    }
+
+    /**
+     * Add setX expectation to coordinate mocked object
+     * @param Coordinate $coordinate
+     * @param int $y
+     */
+    private function addSetYExpectationToCoordinateMock(Coordinate $coordinate, int $y)
+    {
+        $coordinate->shouldReceive('setY')
+            ->with($y)
+            ->andReturnSelf();
+    }
+
+    /**
      * Mock Rover object
      * @return Rover
      */
@@ -55,32 +86,28 @@ trait ModelMokeryTrait
      * Configure Rover coordinate methods expectation
      * @param Rover $rover
      * @param Coordinate $initalCoordinate
-     * @return Rover
      */
-    private function configureRoverCoordinateMethodsExpectation(Rover $rover, Coordinate $initalCoordinate): Rover
+    private function configureRoverCoordinateMethodsExpectation(Rover $rover, Coordinate $initalCoordinate)
     {
         $rover->shouldReceive('getCoordinate')
             ->andReturn($initalCoordinate);
         $rover->shouldReceive('setCoordinate')
             ->with($initalCoordinate)
             ->andReturnSelf();
-        return $rover;
     }
 
     /**
      * Configure Rover direction methods expectation
      * @param Rover $rover
      * @param Direction $initialDirection
-     * @return Rover
      */
-    private function configureRoverDirectionMethodsExpectation(Rover $rover, Direction $initialDirection): Rover
+    private function configureRoverDirectionMethodsExpectation(Rover $rover, Direction $initialDirection)
     {
         $rover->shouldReceive('getDirection')
             ->andReturn($initialDirection);
         $rover->shouldReceive('setDirection')
             ->with($initialDirection)
             ->andReturnSelf();
-        return $rover;
     }
 
     /**
@@ -88,17 +115,15 @@ trait ModelMokeryTrait
      * @param Rover $rover
      * @param Coordinate $finalCoordinate
      * @param Direction $finalDirection
-     * @return Rover
      */
-    private function addToStringMethodExpectationToRoverMock(Rover $rover, Coordinate $finalCoordinate, Direction $finalDirection): Rover
+    private function addToStringMethodExpectationToRoverMock(Rover $rover, Coordinate $finalCoordinate, Direction $finalDirection)
     {
         $rover->shouldReceive('toString')
-        ->andReturn(
-            $finalCoordinate->getX() . ' ' .
-            $finalCoordinate->getY() . ' ' .
-            $finalDirection->getOrientation()
-        );
-        return $rover;
+            ->andReturn(
+                $finalCoordinate->getX() . ' ' .
+                $finalCoordinate->getY() . ' ' .
+                $finalDirection->getOrientation()
+            );
     }
 
     /**
@@ -117,13 +142,33 @@ trait ModelMokeryTrait
     /** add setOrientation method expectation to direction mocked object
      * @param Direction $direction
      * @param string $orientation
-     * @return Direction
      */
-    private function addSetOrientationExpectationToDirectionMock(Direction $direction, string $orientation): Direction
+    private function addSetOrientationExpectationToDirectionMock(Direction $direction, string $orientation)
     {
         $direction->shouldReceive('setOrientation')
             ->with($orientation)
             ->andReturnSelf();
-        return $direction;
+    }
+
+    /**
+     * @param string $orientation
+     * @param Coordinate $intialCoordinate
+     * @param Coordinate $finalCoordinate
+     * @param Direction $initialDirection
+     * @param Coordinate $finalCoordinate
+     * @return Rover
+     */
+    private function configureRoverMock(
+        Coordinate $intialCoordinate,
+        Coordinate $finalCoordinate,
+        Direction $initialDirection,
+        Direction $finalDirection
+        ): Rover
+    {
+        $rover = $this->getRoverMock();
+        $this->configureRoverCoordinateMethodsExpectation($rover, $intialCoordinate);
+        $this->configureRoverDirectionMethodsExpectation($rover, $initialDirection);
+        $this->addToStringMethodExpectationToRoverMock($rover, $finalCoordinate, $finalDirection);
+        return $rover;
     }
 }

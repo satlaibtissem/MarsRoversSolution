@@ -9,12 +9,16 @@ use App\Command\RotateLeft;
 use App\Data\DirectionTypes;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
-use Test\Traits\ModelMokeryTrait;
+use Test\Command\Traits\RotatableTrait;
 
 class RotateLeftTest extends TestCase
 {
-    use ModelMokeryTrait;
+    use RotatableTrait;
 
+    /**
+     * @var Rover
+     */
+    private $rover;
     /**
      * @var RotateLeft
      */
@@ -49,8 +53,14 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForNorthDirection()
     {
-        $rover = $this->configureRoverMock(DirectionTypes::NORTH, DirectionTypes::WEST);
-        $this->assertEquals('1 1 ' . DirectionTypes::WEST, $rover->toString());
+        $this->rotate(
+            $this->rotateLeft,
+            1,
+            1,
+            DirectionTypes::NORTH,
+            DirectionTypes::WEST
+        );
+        $this->assertEquals('1 1 ' . DirectionTypes::WEST, $this->rover->toString());
     }
 
     /**
@@ -58,8 +68,14 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForEastDirection()
     {
-        $rover = $this->configureRoverMock(DirectionTypes::EAST, DirectionTypes::NORTH);
-        $this->assertEquals('1 1 ' . DirectionTypes::NORTH, $rover->toString());
+        $this->rotate(
+            $this->rotateLeft,
+            1,
+            1,
+            DirectionTypes::EAST,
+            DirectionTypes::NORTH
+        );
+        $this->assertEquals('1 1 ' . DirectionTypes::NORTH, $this->rover->toString());
     }
 
     /**
@@ -67,8 +83,14 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForSouthDirection()
     {
-        $rover = $this->configureRoverMock(DirectionTypes::SOUTH, DirectionTypes::EAST);
-        $this->assertEquals('1 1 ' . DirectionTypes::EAST, $rover->toString());
+        $this->rotate(
+            $this->rotateLeft,
+            1,
+            1,
+            DirectionTypes::SOUTH,
+            DirectionTypes::EAST
+        );
+        $this->assertEquals('1 1 ' . DirectionTypes::EAST, $this->rover->toString());
     }
 
     /**
@@ -76,33 +98,13 @@ class RotateLeftTest extends TestCase
      */
     public function testThatRotateLeftCommandReturnsTheRightDirectionForWestDirection()
     {
-        $rover = $this->configureRoverMock(DirectionTypes::WEST, DirectionTypes::SOUTH);
-        $this->assertEquals('1 1 ' . DirectionTypes::SOUTH, $rover->toString());
-    }
-
-    /**
-     * @param string $initialDirection
-     * @param string $finalDirection
-     * @return Rover
-     */
-    private function configureRoverMock(string $initialDirection, string $finalDirection): Rover
-    {
-        $rover = $this->getRoverMock();
-        $roverInitialDirection = $this->getDirectionMock($initialDirection);
-        $roverInitialDirection = $this->addSetOrientationExpectationToDirectionMock(
-            $roverInitialDirection,
-            $finalDirection
+        $this->rotate(
+            $this->rotateLeft,
+            1,
+            1,
+            DirectionTypes::WEST,
+            DirectionTypes::SOUTH
         );
-        $rover = $this->configureRoverDirectionMethodsExpectation(
-            $rover,
-            $roverInitialDirection
-        );
-        $this->rotateLeft->execute($rover);
-        $rover = $this->addToStringMethodExpectationToRoverMock(
-            $rover,
-            $this->getCoordinateMock(1, 1),
-            $this->getDirectionMock($finalDirection)
-        );
-        return $rover;
+        $this->assertEquals('1 1 ' . DirectionTypes::SOUTH, $this->rover->toString());
     }
 }

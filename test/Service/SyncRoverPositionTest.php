@@ -24,7 +24,7 @@ class SyncRoverPositionTest extends TestCase
     {
         $service = new SyncRoverPosition(
             $this->getInvokerMock(),
-            \Mockery::mock(Plateau::class)
+            $this->getPlateauMock()
         );
         $this->assertInstanceOf(ServiceInterface::class, $service);
     }
@@ -36,8 +36,16 @@ class SyncRoverPositionTest extends TestCase
     {
         $lowerLeftCoordinate = $this->getCoordinateMock(0, 0);
         $upperRightCoordinate = $this->getCoordinateMock(5, 5);
-        $rover = $this->configureRoverPosition(1, 3, DirectionTypes::NORTH);
         $plateau = $this->getPlateauMock($lowerLeftCoordinate, $upperRightCoordinate);
+        $initialCoordinate = $this->getCoordinateMock(1, 2);
+        $finalCoordinate = $this->getCoordinateMock(1, 3);
+        $direction = $this->getDirectionMock(DirectionTypes::NORTH);
+        $rover = $this->configureRoverMock(
+            $initialCoordinate,
+            $finalCoordinate,
+            $direction,
+            $direction
+        );
         $commands = [
             CommandTypes::ROTATE_LEFT,
             CommandTypes::MOVE_FORWARD,
@@ -49,11 +57,8 @@ class SyncRoverPositionTest extends TestCase
             CommandTypes::MOVE_FORWARD,
             CommandTypes::MOVE_FORWARD
         ];
-        $invoker = $this->getInvokerMock();
-        foreach ($commands as $command)
-            $invoker->shouldReceive('executeCommand')
-                ->with($command, $rover, $plateau)
-                ->andReturnSelf();
+        $invoker = $this->getInvokerMock($commands, $rover, $plateau);
+        
         $service = new SyncRoverPosition($invoker, $plateau);
         $service->consume($rover, $commands);
         $this->assertEquals('1 3 N', $rover->toString());
@@ -61,28 +66,18 @@ class SyncRoverPositionTest extends TestCase
 
     /**
      * Mock Invoker interface
-     * @return Invoker
+     * @param array $commands
+     * @param Rover $rover
+     * @param Plateau $plateau
+     * @return InvokerInterface
      */
-    private function getInvokerMock(): InvokerInterface
+    private function getInvokerMock(array $commands = [], Rover $rover = null, Plateau $plateau = null): InvokerInterface
     {
-        return \Mockery::mock(InvokerInterface::class);
-    }
-
-    /**
-     * Configure rover position
-     * @param int $x
-     * @param int $y
-     * @param string $orientation
-     * @return Rover
-     */
-    private function configureRoverPosition(int $x, int $y, string $orientation): Rover
-    {
-        $rover = $this->getRoverMock();
-        $coordinate = $this->getCoordinateMock($x, $y);
-        $direction = $this->getDirectionMock($orientation);
-        $rover = $this->configureRoverCoordinateMethodsExpectation($rover, $coordinate);
-        $rover = $this->configureRoverDirectionMethodsExpectation($rover, $direction);
-        $rover = $this->addToStringMethodExpectationToRoverMock($rover, $coordinate, $direction);
-        return $rover;
+        $invoker = \Mockery::mock(InvokerInterface::class);
+        foreach ($commands as $command)
+            $invoker->shouldReceive('executeCommand')
+                ->with($command, $rover, $plateau)
+                ->andReturnSelf();
+        return $invoker;
     }
 }

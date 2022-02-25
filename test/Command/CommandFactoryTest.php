@@ -58,7 +58,10 @@ class CommandFactoryTest extends TestCase
      */
     public function testThatCreateCommandCreatesRotateLeftCommand()
     {
-        $this->assertInstanceOf(RotateLeft::class, $this->factory->createCommand(CommandTypes::ROTATE_LEFT));
+        $this->assertInstanceOf(
+            RotateLeft::class,
+            $this->factory->createCommand(CommandTypes::ROTATE_LEFT)
+        );
     }
 
     /**
@@ -66,7 +69,10 @@ class CommandFactoryTest extends TestCase
      */
     public function testThatCreateCommandCreatesRotateRightCommand()
     {
-        $this->assertInstanceOf(RotateRight::class, $this->factory->createCommand(CommandTypes::ROTATE_RIGHT));
+        $this->assertInstanceOf(
+            RotateRight::class,
+            $this->factory->createCommand(CommandTypes::ROTATE_RIGHT)
+        );
     }
 
     /**
