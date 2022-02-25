@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Command\Traits;
+namespace Test\Traits;
 
 use App\Command\CommandInterface;
 use Test\Traits\ModelMokeryTrait;

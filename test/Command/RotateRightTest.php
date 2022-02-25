@@ -9,7 +9,7 @@ use App\Command\RotateRight;
 use App\Data\DirectionTypes;
 use App\Model\Rover;
 use PHPUnit\Framework\TestCase;
-use Test\Command\Traits\RotatableTrait;
+use Test\Traits\RotatableTrait;
 
 class RotateRightTest extends TestCase
 {
