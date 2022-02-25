@@ -7,16 +7,21 @@ use App\Model\Rover;
 abstract class Rotatable implements CommandInterface
 {
     /**
-     * Rotate in a specific direction
-     * @param Rover $rover
+     * Execute rotation and return the new direction 
+     * @param string $orientation
+     * @return string
      */
-    public abstract function rotate(Rover $rover);
+    protected abstract function getDirectionAfterRotation(string $orientation): string;
 
     /**
      * @inheritDoc
      */
     public function execute(Rover $rover)
     {
-        $this->rotate($rover);
+        $direction = $this->getDirectionAfterRotation(
+            $rover->getDirection()->getOrientation()
+        );
+        $rover->getDirection()->setOrientation($direction);
+        $rover->setDirection($rover->getDirection());
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Data\DirectionTypes;
-use App\Model\Rover;
 
 class RotateRight extends Rotatable
 {
@@ -11,9 +10,9 @@ class RotateRight extends Rotatable
     /**
      * @inheritDoc
      */
-    public function rotate(Rover $rover)
+    protected function getDirectionAfterRotation(string $orientation): string
     {
-        switch ($rover->getDirection()->getOrientation()) {
+        switch ($orientation) {
             case DirectionTypes::NORTH:
                 $direction = DirectionTypes::EAST;
                 break;
@@ -27,8 +26,6 @@ class RotateRight extends Rotatable
                 $direction = DirectionTypes::WEST;
                 break;
         }
-        $rover->getDirection()->setOrientation($direction);
-        $rover->setDirection($rover->getDirection());
-        return;
+        return $direction;
     }
 }
